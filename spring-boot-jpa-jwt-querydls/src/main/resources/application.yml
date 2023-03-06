@@ -35,13 +35,21 @@ feign:
 
 kakao:
   client:
-    id: wfefwe
-    secret: wef
+    id: ENC(YnzDIU11kUO5m1zevR25r7uHP06exIIN5VGOev7DnDiFv3+5HkGYKa1K1jmsqRJx)
+    secret: ENC(QrMqb1xro3Gnq8JkalL31QmqMs6vF/ETlYFKMXnB0HZbo7ZHFu9JDpEYJwizdL+n)
+
+
+
+swagger:
+  title: "swagger 이름"
+  description: "API에 대해서 설명해주는 문서입니다."
+  version: "1.0"
 
 token:
-  secret: wef
+  secret: ENC(szwb38FkpzsNxMn8tAEhX5gTO+JMgwq9)
   access-token-expiration-time: 900000  # 15분 1000(ms) x 60(s) x 15(m)
   refresh-token-expiration-time: 1209600000 # 2주 1000(ms) x 60 (s) x 60(m) x 24(h) x 14(d)
 
 jasypt:
-  password: ${PASSWORD}
+  encryptor:
+    password: ${PASSWORD}
