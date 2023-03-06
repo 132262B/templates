@@ -1,8 +1,7 @@
 package com.app.api.member.controller;
 
-import com.app.api.member.dto.MemberInfoResponseDto;
-import com.app.api.member.service.MemberInfoService;
-import com.app.global.jwt.service.TokenManager;
+import com.app.api.member.dto.response.MemberInfoResponse;
+import com.app.api.member.facade.MemberFacade;
 import com.app.global.resolver.memberinfo.MemberInfo;
 import com.app.global.resolver.memberinfo.MemberInfoDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,24 +18,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/member")
 @RequiredArgsConstructor
-public class MemberInfoController {
+public class MemberController {
 
-    private final TokenManager tokenManager;
-    private final MemberInfoService memberInfoService;
+    private final MemberFacade memberFacade;
 
     @Tag(name = "member")
-    @Operation(summary = "회원 정보 조회 API", description = "회원 정보 조회 API")
+    @Operation(summary = "내 정보 조회 API", description = "내 정보 조회 API")
     @ApiResponses({
-            @ApiResponse(responseCode = "500", description = "서버 오류 발생"),
+            @ApiResponse(responseCode = "500", description = "서버 오류 발생(관리자 문의)"),
             @ApiResponse(responseCode = "M-003", description = "해당 회원은 존재하지 않는 회원입니다.")
     })
-    @GetMapping("/info")
-    public ResponseEntity<MemberInfoResponseDto> getMemberInfo(@MemberInfo MemberInfoDto memberInfoDto) {
-
+    @GetMapping
+    public ResponseEntity<MemberInfoResponse> findMyInfo(@MemberInfo MemberInfoDto memberInfoDto) {
         Long memberId = memberInfoDto.getMemberId();
-        MemberInfoResponseDto memberInfoResponseDto = memberInfoService.getMemberInfo(memberId);
-
-        return ResponseEntity.ok(memberInfoResponseDto);
+        return ResponseEntity.ok(memberFacade.findMemberInfo(memberId));
     }
 
 }

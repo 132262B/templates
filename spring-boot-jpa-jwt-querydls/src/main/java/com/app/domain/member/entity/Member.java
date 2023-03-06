@@ -9,18 +9,26 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Where(clause = "status = 'Y'")
+@DynamicInsert
+@SQLDelete(sql = "UPDATE member SET status = 'N' WHERE member_id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
+    @Column(name = "member_id")
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
@@ -33,7 +41,7 @@ public class Member extends BaseEntity {
     private String password;
 
     @Column(nullable = false, length = 20)
-    private String memberName;
+    private String username;
 
     @Column(length = 200)
     private String profile;
@@ -42,18 +50,21 @@ public class Member extends BaseEntity {
     @Column(nullable = false, length = 10)
     private Role role;
 
+    @ColumnDefault("'Y'")
+    @Column(length = 1, nullable = false)
+    private String status;
+
     @Column(length = 250)
     private String refreshToken;
 
     private LocalDateTime tokenExpirationTime;
 
     @Builder
-    public Member(MemberType memberType, String email, String password, String memberName,
-                  String profile, Role role) {
+    public Member(MemberType memberType, String email, String password, String username, String profile, Role role) {
         this.memberType = memberType;
         this.email = email;
         this.password = password;
-        this.memberName = memberName;
+        this.username = username;
         this.profile = profile;
         this.role = role;
     }

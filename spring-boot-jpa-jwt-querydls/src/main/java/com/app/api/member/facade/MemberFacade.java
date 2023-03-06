@@ -1,6 +1,6 @@
-package com.app.api.member.service;
+package com.app.api.member.facade;
 
-import com.app.api.member.dto.MemberInfoResponseDto;
+import com.app.api.member.dto.response.MemberInfoResponse;
 import com.app.domain.member.entity.Member;
 import com.app.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -9,14 +9,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class MemberInfoService {
+public class MemberFacade {
 
     private final MemberService memberService;
 
     @Transactional(readOnly = true)
-    public MemberInfoResponseDto getMemberInfo(Long memberId) {
-        Member member = memberService.findMemberByMemberId(memberId);
-        return MemberInfoResponseDto.of(member);
+    public MemberInfoResponse findMemberInfo(Long memberId) {
+        Member member = memberService.findMemberById(memberId);
+        return MemberInfoResponse.of(member);
     }
 
 }
