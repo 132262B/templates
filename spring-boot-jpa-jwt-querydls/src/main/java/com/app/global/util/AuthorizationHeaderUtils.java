@@ -3,8 +3,15 @@ package com.app.global.util;
 import com.app.global.error.ErrorCode;
 import com.app.global.error.exception.AuthenticationException;
 import com.app.global.jwt.constant.GrantType;
+import lombok.experimental.UtilityClass;
 import org.springframework.util.StringUtils;
 
+/**
+ * Header에서 Authorization 관련 체크 Util
+ *
+ * @author igor
+ */
+@UtilityClass
 public class AuthorizationHeaderUtils {
 
     public static void validateAuthorization(String authorizationHeader) {
