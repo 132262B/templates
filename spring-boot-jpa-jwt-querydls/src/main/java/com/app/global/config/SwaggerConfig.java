@@ -22,13 +22,13 @@ import java.util.List;
 @Configuration
 public class SwaggerConfig {
 
-    @Value("swagger.title")
+    @Value("${swagger.title}")
     private String TITLE;
 
-    @Value("swagger.description")
+    @Value("${swagger.description}")
     private String DESCRIPTION;
 
-    @Value("swagger.version")
+    @Value("${swagger.version}")
     private String VERSION;
 
     @Bean
