@@ -14,11 +14,12 @@ public class OAuthAttributes {
     private String name;
     private String email;
     private String profile;
+
     private MemberType memberType;
 
     public Member toMemberEntity(MemberType memberType, Role role) {
         return Member.builder()
-                .memberName(name)
+                .username(name)
                 .email(email)
                 .memberType(memberType)
                 .profile(profile)

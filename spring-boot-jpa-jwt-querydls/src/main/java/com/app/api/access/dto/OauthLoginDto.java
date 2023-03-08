@@ -1,4 +1,4 @@
-package com.app.api.login.dto;
+package com.app.api.access.dto;
 
 import com.app.global.jwt.dto.JwtTokenDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -9,14 +9,18 @@ import java.util.Date;
 
 public class OauthLoginDto {
 
-    @Getter @Setter
+    @Getter
+    @Setter
     public static class Request {
         @Schema(description = "소셜 로그인 회원 타입", example = "KAKAO", required = true)
         private String memberType;
     }
 
-    @Getter @Setter
-    @Builder @NoArgsConstructor @AllArgsConstructor
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Response {
 
         @Schema(description = "grantType", example = "Bearer", required = true)

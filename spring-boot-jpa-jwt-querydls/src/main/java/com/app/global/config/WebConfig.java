@@ -4,6 +4,7 @@ import com.app.global.config.xss.HtmlCharacterEscapes;
 import com.app.global.interceptor.AdminAuthorizationInterceptor;
 import com.app.global.interceptor.AuthenticationInterceptor;
 import com.app.global.resolver.memberinfo.MemberInfoArgumentResolver;
+import com.app.global.resolver.token.AuthorizationTokenResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.navercorp.lucy.security.xss.servletfilter.XssEscapeServletFilter;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final AuthenticationInterceptor authenticationInterceptor;
     private final MemberInfoArgumentResolver memberInfoArgumentResolver;
+    private final AuthorizationTokenResolver authorizationTokenResolver;
+    private final AuthenticationInterceptor authenticationInterceptor;
     private final AdminAuthorizationInterceptor adminAuthorizationInterceptor;
     private final ObjectMapper objectMapper;
 
@@ -65,6 +67,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(memberInfoArgumentResolver);
+        resolvers.add(authorizationTokenResolver);
     }
 
     @Bean
