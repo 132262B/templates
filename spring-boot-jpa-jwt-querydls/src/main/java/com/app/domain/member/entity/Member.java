@@ -1,29 +1,27 @@
 package com.app.domain.member.entity;
 
-import com.app.domain.common.BaseEntity;
+import com.app.domain.common.BaseTimeEntity;
 import com.app.domain.member.constant.MemberType;
 import com.app.domain.member.constant.Role;
 import com.app.global.jwt.dto.JwtTokenDto;
 import com.app.global.util.DateTimeUtils;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import lombok.*;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Where(clause = "status = 'Y'")
-@DynamicInsert
 @SQLDelete(sql = "UPDATE member SET status = 'N' WHERE member_id = ?")
+@DynamicInsert
+@DynamicUpdate
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member extends BaseEntity {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +29,7 @@ public class Member extends BaseEntity {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
+    @Column(length = 10, nullable = false)
     private MemberType memberType;
 
     @Column(unique = true, length = 50, nullable = false)
@@ -40,14 +38,14 @@ public class Member extends BaseEntity {
     @Column(length = 200)
     private String password;
 
-    @Column(nullable = false, length = 20)
+    @Column(length = 20, nullable = false)
     private String username;
 
-    @Column(length = 200)
+    @Column(length = 300)
     private String profile;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
+    @Column(length = 10, nullable = false)
     private Role role;
 
     @ColumnDefault("'Y'")
@@ -59,16 +57,6 @@ public class Member extends BaseEntity {
 
     private LocalDateTime tokenExpirationTime;
 
-    @Builder
-    public Member(MemberType memberType, String email, String password, String username, String profile, Role role) {
-        this.memberType = memberType;
-        this.email = email;
-        this.password = password;
-        this.username = username;
-        this.profile = profile;
-        this.role = role;
-    }
-
     public void updateRefreshToken(JwtTokenDto jwtTokenDto) {
         this.refreshToken = jwtTokenDto.getRefreshToken();
         this.tokenExpirationTime = DateTimeUtils.convertToLocalDateTime(jwtTokenDto.getRefreshTokenExpireTime());
@@ -76,5 +64,11 @@ public class Member extends BaseEntity {
 
     public void expireRefreshToken(LocalDateTime now) {
         this.tokenExpirationTime = now;
+    }
+
+
+    public void changeMemberInfo(String username, String profile) {
+        this.username = username;
+        this.profile = profile;
     }
 }

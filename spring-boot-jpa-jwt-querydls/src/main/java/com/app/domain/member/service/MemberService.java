@@ -1,5 +1,6 @@
 package com.app.domain.member.service;
 
+import com.app.api.member.dto.request.ModifyInfoRequest;
 import com.app.domain.member.entity.Member;
 import com.app.domain.member.repository.MemberRepository;
 import com.app.global.error.ErrorCode;
@@ -29,7 +30,7 @@ public class MemberService {
     // 이메일 체크
     private void validateDuplicateMember(Member member) {
         Optional<Member> optionalMember = memberRepository.findByEmail(member.getEmail());
-        if(optionalMember.isPresent()) {
+        if (optionalMember.isPresent()) {
             throw new BusinessException(ErrorCode.ALREADY_REGISTERED_MEMBER);
         }
     }
@@ -43,7 +44,7 @@ public class MemberService {
                 .orElseThrow(() -> new AuthenticationException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
 
         LocalDateTime tokenExpirationTime = member.getTokenExpirationTime();
-        if(tokenExpirationTime.isBefore(LocalDateTime.now())) {
+        if (tokenExpirationTime.isBefore(LocalDateTime.now())) {
             throw new AuthenticationException(ErrorCode.REFRESH_TOKEN_EXPIRED);
         }
         return member;
@@ -52,5 +53,15 @@ public class MemberService {
     public Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_EXISTS));
+    }
+
+    @Transactional
+    public void modifyMemberInfo(Member member, ModifyInfoRequest request) {
+        member.changeMemberInfo(request.getUsername(), request.getProfile());
+    }
+
+    @Transactional
+    public void secessionMember(Member member) {
+        memberRepository.delete(member);
     }
 }

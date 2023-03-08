@@ -18,7 +18,7 @@ public class MemberInfoResponse {
     @Schema(description = "회원 이름", example = "홍길동", required = true)
     private String username;
 
-    @Schema(description = "프로필 이미지 경로", example = "https://k.kakaocdn.net/img_110x110.jpg")
+    @Schema(description = "프로필 이미지 경로", example = "https://domain.com/img_110x110.jpg")
     private String profile;
 
     @Schema(description = "회원의 역할", example = "USER", required = true)

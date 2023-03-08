@@ -1,9 +1,6 @@
 package com.app.global.resolver.token;
 
-import com.app.domain.member.constant.Role;
-import com.app.global.resolver.memberinfo.MemberInfoDto;
 import com.app.global.util.AuthorizationHeaderUtils;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
@@ -27,7 +24,7 @@ public class AuthorizationTokenResolver implements HandlerMethodArgumentResolver
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -37,7 +34,7 @@ public class AuthorizationTokenResolver implements HandlerMethodArgumentResolver
 
         return TokenDto.builder()
                 .authorizationHeader(authorizationHeader)
-                .accessToken(accessToken)
+                .token(accessToken)
                 .build();
     }
 

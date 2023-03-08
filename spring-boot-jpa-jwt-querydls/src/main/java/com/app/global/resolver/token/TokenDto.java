@@ -10,5 +10,5 @@ public class TokenDto {
 
     private String authorizationHeader;
 
-    private String accessToken;
+    private String token;
 }
