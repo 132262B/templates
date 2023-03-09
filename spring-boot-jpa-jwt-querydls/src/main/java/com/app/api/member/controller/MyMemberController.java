@@ -2,7 +2,7 @@ package com.app.api.member.controller;
 
 import com.app.api.member.dto.request.ModifyInfoRequest;
 import com.app.api.member.dto.response.MemberInfoResponse;
-import com.app.api.member.facade.MemberFacade;
+import com.app.api.member.facade.MyMemberFacade;
 import com.app.global.model.ApiResult;
 import com.app.global.resolver.memberinfo.MemberInfo;
 import com.app.global.resolver.memberinfo.MemberInfoDto;
@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/member")
 @RequiredArgsConstructor
-public class MemberController {
+public class MyMemberController {
 
-    private final MemberFacade memberFacade;
+    private final MyMemberFacade myMemberFacade;
 
     @Tag(name = "my-member")
     @Operation(summary = "내 정보 조회 API", description = "내 정보 조회 API")
@@ -33,7 +33,7 @@ public class MemberController {
     @GetMapping
     public ResponseEntity<ApiResult<MemberInfoResponse>> findMyInfo(@MemberInfo MemberInfoDto memberInfoDto) {
         Long memberId = memberInfoDto.getMemberId();
-        return ResponseEntity.ok(new ApiResult<>(memberFacade.findMemberInfo(memberId)));
+        return ResponseEntity.ok(new ApiResult<>(myMemberFacade.findMemberInfo(memberId)));
     }
 
     @Tag(name = "my-member")
@@ -43,7 +43,7 @@ public class MemberController {
                                         @MemberInfo MemberInfoDto memberInfoDto) {
 
         Long memberId = memberInfoDto.getMemberId();
-        memberFacade.modifyMemberInfo(memberId, request);
+        myMemberFacade.modifyMemberInfo(memberId, request);
 
         return ResponseEntity.created(UriUtil.createUri()).build();
     }
@@ -53,7 +53,7 @@ public class MemberController {
     @DeleteMapping
     public ResponseEntity<Void> secession(@MemberInfo MemberInfoDto memberInfoDto) {
         Long memberId = memberInfoDto.getMemberId();
-        memberFacade.secessionMember(memberId);
+        myMemberFacade.secessionMember(memberId);
 
         return ResponseEntity.noContent().build();
     }
