@@ -7,6 +7,7 @@ spring:
     url: jdbc:mysql://localhost:3306/jpa_community?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: 1234
+    driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: create
