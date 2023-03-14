@@ -22,11 +22,13 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+# logging 설정
 logging:
   level:
     org.hibernate.type: trace # 콘솔창에 조건에 바인딩되는 값 및 조회 결과 출력
     com.app: debug # todo 패키지 수정
 
+# spring cloud feign client 설정
 feign:
   client:
     config:
@@ -34,23 +36,25 @@ feign:
         connectTimeout: 5000
         readTimeout: 5000
 
-kakao:
-  client:
-    id: ENC(YnzDIU11kUO5m1zevR25r7uHP06exIIN5VGOev7DnDiFv3+5HkGYKa1K1jmsqRJx)
-    secret: ENC(QrMqb1xro3Gnq8JkalL31QmqMs6vF/ETlYFKMXnB0HZbo7ZHFu9JDpEYJwizdL+n)
-
-
-
+# Swagger 설정
 swagger:
   title: "swagger 이름"
   description: "API에 대해서 설명해주는 문서입니다."
   version: "1.0"
 
+# JWT Token 설정
 token:
   secret: ENC(szwb38FkpzsNxMn8tAEhX5gTO+JMgwq9)
   access-token-expiration-time: 900000  # 15분 1000(ms) x 60(s) x 15(m)
   refresh-token-expiration-time: 1209600000 # 2주 1000(ms) x 60 (s) x 60(m) x 24(h) x 14(d)
 
+# Jasypt password 설정
 jasypt:
   encryptor:
     password: ${PASSWORD}
+
+# 카카오 API 설정
+kakao:
+  client:
+    id: ENC(YnzDIU11kUO5m1zevR25r7uHP06exIIN5VGOev7DnDiFv3+5HkGYKa1K1jmsqRJx)
+    secret: ENC(QrMqb1xro3Gnq8JkalL31QmqMs6vF/ETlYFKMXnB0HZbo7ZHFu9JDpEYJwizdL+n)

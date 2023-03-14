@@ -8,6 +8,8 @@ spring:
     hibernate:
       ddl-auto: validate
 
+
+
+# logback 설정 경로
 logging:
-  level:
-    com.app: info # todo 패키지 수정
+  config: classpath:logback/logback-prod.xml

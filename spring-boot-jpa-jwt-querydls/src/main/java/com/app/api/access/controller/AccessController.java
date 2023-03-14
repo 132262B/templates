@@ -7,7 +7,6 @@ import com.app.api.access.validator.OauthValidator;
 import com.app.domain.member.constant.MemberType;
 import com.app.global.resolver.token.AuthorizationToken;
 import com.app.global.resolver.token.TokenDto;
-import com.app.global.util.AuthorizationHeaderUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Tag(name = "authentication", description = "로그인/로그아웃/토큰재발급 API")
 @RestController
