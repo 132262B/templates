@@ -23,13 +23,13 @@ public class MemberService {
 
     @Transactional
     public Member registerMember(Member member) {
-        validateDuplicateMember(member);
+        validateDuplicateMember(member.getEmail());
         return memberRepository.save(member);
     }
 
     // 이메일 체크
-    private void validateDuplicateMember(Member member) {
-        Optional<Member> optionalMember = memberRepository.findByEmail(member.getEmail());
+    private void validateDuplicateMember(String email) {
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
         if (optionalMember.isPresent()) {
             throw new BusinessException(ErrorCode.ALREADY_REGISTERED_MEMBER);
         }
