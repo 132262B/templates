@@ -2,10 +2,9 @@ package com.app;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.context.annotation.PropertySource;
 
 @SpringBootTest
-@ActiveProfiles("classpath:application-test.yml")
 class SpringBootJpaJwtQuerydlsApplicationTests {
 
 	@Test
