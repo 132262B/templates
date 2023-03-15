@@ -1,4 +1,4 @@
-package com.app.api.member.dto.request;
+package com.app.api.mymember.dto.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,9 +18,9 @@ class ModifyInfoRequestTest {
     @DisplayName("둘다 값이 잘 들어간 경우")
     @Test
     void dtoValidateCheck_1() {
-        ModifyInfoRequest request = new ModifyInfoRequest();
-        request.setUsername("홍길동");
-        request.setProfile("https://domain.com/img_110x110.jpg");
+        final String username = "홍길동";
+        final String profile = "https://domain.com/img_110x110.jpg";
+        ModifyInfoRequest request = new ModifyInfoRequest(username, profile);
 
         Set<ConstraintViolation<ModifyInfoRequest>> violations = validator.validate(request);
         assertEquals(0, violations.size());
@@ -29,9 +29,9 @@ class ModifyInfoRequestTest {
     @DisplayName("profile URL, null인 경우")
     @Test
     void dtoValidateCheck_2() {
-        ModifyInfoRequest request = new ModifyInfoRequest();
-        request.setUsername("홍길동");
-        request.setProfile(null);
+        final String username = "홍길동";
+        final String profile = null;
+        ModifyInfoRequest request = new ModifyInfoRequest(username, profile);
 
         Set<ConstraintViolation<ModifyInfoRequest>> violations = validator.validate(request);
         assertEquals(0, violations.size());
@@ -40,9 +40,9 @@ class ModifyInfoRequestTest {
     @DisplayName("profile URL, 옳바르지 않는 URL인 경우")
     @Test
     void dtoValidateCheck_3() {
-        ModifyInfoRequest request = new ModifyInfoRequest();
-        request.setUsername("홍길동");
-        request.setProfile("no_url");
+        final String username = "홍길동";
+        final String profile = "no_url";
+        ModifyInfoRequest request = new ModifyInfoRequest(username, profile);
 
         Set<ConstraintViolation<ModifyInfoRequest>> violations = validator.validate(request);
         assertEquals(1, violations.size());
