@@ -21,13 +21,6 @@ public class DatabaseCleanup implements InitializingBean {
 
     private List<String> tableNames;
 
-
-    /**
-     * InitializingBean 인터페이스를 구현하여 빈 초기화 후에 실행되는 메소드로, 엔티티 매니저를 사용하여
-     * 현재 데이터베이스에 있는 모든 테이블의 이름을 수집합니다.
-     * 테이블이름은 대문자 스네이크 케이스 또는 테이블 어노테이션에서 정의된 이름으로 작성됩니다.
-     * 이 메소드는 execute() 메소드에서 사용됩니다.
-     */
     @Override
     public void afterPropertiesSet() {
         final Set<EntityType<?>> entities = entityManager.getMetamodel().getEntities();
@@ -46,11 +39,14 @@ public class DatabaseCleanup implements InitializingBean {
         tableNames.addAll(entityNames);
     }
 
-    /**
-     * 현재 데이터베이스에서 모든 테이블을 비우고 ID 값을 1부터 다시 시작하도록 재설정합니다.
-     * 테이블 이름은 InitializingBean의 afterPropertiesSet() 메소드에서 수집된 테이블 이름 목록에서 가져옵니다.
-     * 이 메소드는 트랜잭션 어노테이션이 적용된 execute() 메소드에서 호출됩니다.
-     */
+    private boolean isEntity(final EntityType<?> e) {
+        return null != e.getJavaType().getAnnotation(Entity.class);
+    }
+
+    private boolean hasTableAnnotation(final EntityType<?> e) {
+        return null != e.getJavaType().getAnnotation(Table.class);
+    }
+
     @Transactional
     public void execute() {
         entityManager.flush();
@@ -62,19 +58,6 @@ public class DatabaseCleanup implements InitializingBean {
         }
 
         entityManager.createNativeQuery("SET REFERENTIAL_INTEGRITY TRUE").executeUpdate();
-    }
-
-    /**
-     * 주어진 엔티티가 JPA 엔티티인지 확인합니다.
-     * @param e 엔티티
-     * @return JPA 엔티티 여부
-     */
-    private boolean isEntity(final EntityType<?> e) {
-        return null != e.getJavaType().getAnnotation(Entity.class);
-    }
-
-    private boolean hasTableAnnotation(final EntityType<?> e) {
-        return null != e.getJavaType().getAnnotation(Table.class);
     }
 
 }
