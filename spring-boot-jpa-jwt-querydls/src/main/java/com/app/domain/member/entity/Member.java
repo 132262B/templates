@@ -25,7 +25,6 @@ public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
     private Long id;
 
     @Enumerated(EnumType.STRING)

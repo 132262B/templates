@@ -1,4 +1,4 @@
-package com.app.api.member.dto.request;
+package com.app.api.mymember.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -20,4 +20,10 @@ public class ModifyInfoRequest {
     @Pattern(regexp="^(https?://)?([\\w-]+\\.)+[\\w-]+(/[\\w-./?%&=]*)?$", message="올바른 URL 형식이 아닙니다.")
     @Schema(description = "프로필 이미지 경로", example = "https://domain.com/img_110x110.jpg")
     private String profile;
+
+
+    public ModifyInfoRequest(String username, String profile) {
+        this.username = username;
+        this.profile = profile;
+    }
 }
