@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-
 import static com.app.domain.member.MemberSteps.PROFILE;
 import static com.app.domain.member.MemberSteps.USERNAME;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,9 +21,6 @@ class MemberServiceTest extends ServiceTest {
 
     @Autowired
     private MemberService memberService;
-
-    @Autowired
-    private EntityManager em;
 
     @Test
     void 회원생성_성공() {

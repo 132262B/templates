@@ -34,8 +34,9 @@ public class AccessController {
 
         oauthValidator.validateMemberType(oauthLoginRequestDto.getMemberType());
 
-        OauthLoginDto.Response jwtTokenResponseDto = accessFacade
-                .oauthLogin(token.getToken(), MemberType.from(oauthLoginRequestDto.getMemberType()));
+        OauthLoginDto.Response jwtTokenResponseDto = accessFacade.oauthLogin(token.getToken(),
+                MemberType.from(oauthLoginRequestDto.getMemberType()));
+
         return ResponseEntity.ok(jwtTokenResponseDto);
     }
 

@@ -8,7 +8,8 @@ import lombok.Getter;
 import lombok.ToString;
 
 @ToString
-@Getter @Builder
+@Getter
+@Builder
 public class OAuthAttributes {
 
     private String name;
