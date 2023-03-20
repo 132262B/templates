@@ -20,6 +20,9 @@ public enum ErrorCode {
     INVALID_MEMBER_TYPE(HttpStatus.BAD_REQUEST, "M-001", "잘못된 회원 타입 입니다.(memberType : KAKAO)"),
     ALREADY_REGISTERED_MEMBER(HttpStatus.BAD_REQUEST, "M-002", "이미 가입된 회원 입니다."),
     MEMBER_NOT_EXISTS(HttpStatus.BAD_REQUEST, "M-003", "해당 회원은 존재하지 않습니다."),
+
+    EMAIL_OR_PASSWORD_INCONSISTENCY(HttpStatus.BAD_REQUEST, "M-004", "이메일 또는 비밀번호가 일치하지 않습니다."),
+    SIGNUP_PASSWORD_INCONSISTENCY(HttpStatus.BAD_REQUEST, "M-005", "비밀번호와, 비밀번호체크가 일치하지 않습니다."),
     ;
 
     ErrorCode(HttpStatus httpStatus, String errorCode, String message) {
