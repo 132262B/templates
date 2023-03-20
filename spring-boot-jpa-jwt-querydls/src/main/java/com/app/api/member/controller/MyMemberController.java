@@ -1,8 +1,8 @@
-package com.app.api.mymember.controller;
+package com.app.api.member.controller;
 
-import com.app.api.mymember.dto.request.ModifyInfoRequest;
-import com.app.api.mymember.dto.response.MemberInfoResponse;
-import com.app.api.mymember.facade.MyMemberFacade;
+import com.app.api.member.dto.request.ModifyInfoRequest;
+import com.app.api.member.dto.response.MemberInfoResponse;
+import com.app.api.member.facade.MyMemberFacade;
 import com.app.global.model.ApiResult;
 import com.app.global.resolver.memberinfo.MemberInfo;
 import com.app.global.resolver.memberinfo.MemberInfoDto;

@@ -1,9 +1,14 @@
 package com.app.api.access.dto.request;
 
+import com.app.domain.member.constant.MemberType;
+import com.app.domain.member.constant.Role;
+import com.app.domain.member.entity.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -12,6 +17,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 public class SignUpRequest {
 
     @Schema(description = "이메일", example = "member@domain.co.kr", required = true)
@@ -39,4 +45,15 @@ public class SignUpRequest {
     @Pattern(regexp = "^(https?://)?([\\w-]+\\.)+[\\w-]+(/[\\w-./?%&=]*)?$", message = "올바른 URL 형식이 아닙니다.")
     @Schema(description = "프로필 이미지 경로", example = "https://domain.com/img_110x110.jpg")
     private String profile;
+
+    public Member toMemberEntity(PasswordEncoder passwordEncoder,MemberType memberType, Role role) {
+        return Member.builder()
+                .email(this.email)
+                .password(passwordEncoder.encode(this.password))
+                .username( this.username)
+                .profile(this.profile)
+                .memberType(memberType)
+                .role(role)
+                .build();
+    }
 }

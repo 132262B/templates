@@ -1,7 +1,10 @@
 package com.app.api.access.facade;
 
-import com.app.api.access.dto.OauthLoginDto;
+import com.app.api.access.dto.request.LoginRequest;
+import com.app.api.access.dto.request.SignUpRequest;
 import com.app.api.access.dto.response.AccessTokenResponse;
+import com.app.api.access.dto.response.LoginResponse;
+import com.app.api.access.validator.PasswordValidator;
 import com.app.domain.member.constant.MemberType;
 import com.app.domain.member.constant.Role;
 import com.app.domain.member.entity.Member;
@@ -18,6 +21,7 @@ import com.app.oauth.service.SocialLoginApiServiceFactory;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,8 +38,34 @@ public class AccessFacade {
     private final MemberService memberService;
     private final TokenManager tokenManager;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Transactional
-    public OauthLoginDto.Response oauthLogin(String accessToken, MemberType memberType) {
+    public LoginResponse register(SignUpRequest signUpRequest) {
+        PasswordValidator.passwordCheck(signUpRequest.getPassword(), signUpRequest.getPasswordCheck());
+
+        Member member = signUpRequest.toMemberEntity(passwordEncoder, MemberType.LOCAL, Role.USER);
+        member = memberService.registerMember(member);
+
+        JwtTokenDto jwtTokenDto = tokenManager.createJwtTokenDto(member.getId(), member.getRole());
+        member.updateRefreshToken(jwtTokenDto);
+
+        return LoginResponse.of(jwtTokenDto);
+    }
+
+    @Transactional
+    public LoginResponse login(LoginRequest loginRequest) {
+        loginRequest.setPassword(passwordEncoder.encode(loginRequest.getPassword()));
+
+        Member member = memberService.findMemberByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
+        JwtTokenDto jwtTokenDto = tokenManager.createJwtTokenDto(member.getId(), member.getRole());
+        member.updateRefreshToken(jwtTokenDto);
+
+        return LoginResponse.of(jwtTokenDto);
+    }
+
+    @Transactional
+    public LoginResponse oauthLogin(String accessToken, MemberType memberType) {
         SocialLoginApiService socialLoginApiService = SocialLoginApiServiceFactory.getSocialLoginApiService(memberType);
         OAuthAttributes userInfo = socialLoginApiService.getUserInfo(accessToken);
 
@@ -55,7 +85,7 @@ public class AccessFacade {
         jwtTokenDto = tokenManager.createJwtTokenDto(oauthMember.getId(), oauthMember.getRole());
         oauthMember.updateRefreshToken(jwtTokenDto);
 
-        return OauthLoginDto.Response.of(jwtTokenDto);
+        return LoginResponse.of(jwtTokenDto);
     }
 
     public void logout(String accessToken) {

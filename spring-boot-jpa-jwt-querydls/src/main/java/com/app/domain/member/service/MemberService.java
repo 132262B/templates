@@ -1,14 +1,12 @@
 package com.app.domain.member.service;
 
-import com.app.api.mymember.dto.request.ModifyInfoRequest;
+import com.app.api.member.dto.request.ModifyInfoRequest;
 import com.app.domain.member.entity.Member;
 import com.app.domain.member.exception.DuplicateMemberException;
 import com.app.domain.member.repository.MemberRepository;
 import com.app.global.error.ErrorCode;
 import com.app.global.error.exception.AuthenticationException;
-import com.app.global.error.exception.BusinessException;
 import com.app.global.error.exception.EntityNotFoundException;
-import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,5 +63,10 @@ public class MemberService {
     @Transactional
     public void secessionMember(Member member) {
         memberRepository.delete(member);
+    }
+
+    public Member findMemberByEmailAndPassword(String email, String password) {
+        return memberRepository.findByEmailAndPassword(email, password)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.EMAIL_OR_PASSWORD_INCONSISTENCY));
     }
 }

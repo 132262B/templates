@@ -1,6 +1,6 @@
 package com.app.domain.member;
 
-import com.app.api.mymember.dto.request.ModifyInfoRequest;
+import com.app.api.member.dto.request.ModifyInfoRequest;
 import com.app.domain.member.constant.MemberType;
 import com.app.domain.member.constant.Role;
 import com.app.domain.member.entity.Member;

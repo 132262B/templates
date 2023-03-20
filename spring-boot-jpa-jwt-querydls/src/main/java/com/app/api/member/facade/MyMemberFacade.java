@@ -1,7 +1,7 @@
-package com.app.api.mymember.facade;
+package com.app.api.member.facade;
 
-import com.app.api.mymember.dto.request.ModifyInfoRequest;
-import com.app.api.mymember.dto.response.MemberInfoResponse;
+import com.app.api.member.dto.request.ModifyInfoRequest;
+import com.app.api.member.dto.response.MemberInfoResponse;
 import com.app.domain.member.entity.Member;
 import com.app.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;

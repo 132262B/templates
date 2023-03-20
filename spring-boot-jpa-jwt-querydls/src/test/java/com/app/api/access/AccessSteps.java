@@ -1,12 +1,10 @@
 package com.app.api.access;
 
 import com.app.ApiTest;
-import com.app.api.access.dto.OauthLoginDto;
+import com.app.api.access.dto.request.OauthLoginRequest;
 import com.app.domain.member.MemberSteps;
 import com.app.domain.member.constant.MemberType;
-import com.app.global.resolver.token.TokenDto;
 import com.app.oauth.model.OAuthAttributes;
-import com.app.oauth.service.SocialLoginApiService;
 import com.app.oauth.service.SocialLoginApiServiceFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mockito.Mock;
@@ -33,12 +31,9 @@ public class AccessSteps extends ApiTest {
     private ObjectMapper objectMapper;
 
     @Mock
-    private SocialLoginApiService socialLoginApiService;
-
-    @Autowired
     private SocialLoginApiServiceFactory socialLoginApiServiceFactory;
 
-    public MockHttpServletResponse 회원가입(OauthLoginDto.Request oauthLoginRequestDto) throws Exception {
+    public MockHttpServletResponse 회원가입(OauthLoginRequest oauthLoginRequestDto) throws Exception {
 
         final String token = "Bearer tokentoken";
 
@@ -49,7 +44,8 @@ public class AccessSteps extends ApiTest {
                 .memberType(MemberType.KAKAO)
                 .build();
 
-        Mockito.when(socialLoginApiService.getUserInfo(token)).thenReturn(userInfo);
+        Mockito.when(SocialLoginApiServiceFactory.getSocialLoginApiService(MemberType.KAKAO).getUserInfo(token)).thenReturn(userInfo);
+
 
         return mockMvc.perform(
                         post("/api/oauth/login")

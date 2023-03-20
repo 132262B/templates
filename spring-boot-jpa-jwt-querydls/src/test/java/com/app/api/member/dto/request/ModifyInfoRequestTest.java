@@ -1,4 +1,4 @@
-package com.app.api.mymember.dto.request;
+package com.app.api.member.dto.request;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

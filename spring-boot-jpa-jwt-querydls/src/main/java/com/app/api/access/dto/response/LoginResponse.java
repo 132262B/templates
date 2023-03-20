@@ -12,7 +12,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OauthLoginResponse {
+public class LoginResponse {
 
     @Schema(description = "grantType", example = "Bearer", required = true)
     private String grantType;
@@ -31,8 +31,8 @@ public class OauthLoginResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private Date refreshTokenExpireTime;
 
-    public static OauthLoginResponse of(JwtTokenDto jwtTokenDto) {
-        return OauthLoginResponse.builder()
+    public static LoginResponse of(JwtTokenDto jwtTokenDto) {
+        return LoginResponse.builder()
                 .grantType(jwtTokenDto.getGrantType())
                 .accessToken(jwtTokenDto.getAccessToken())
                 .accessTokenExpireTime(jwtTokenDto.getAccessTokenExpireTime())

@@ -1,4 +1,4 @@
-package com.app.api.mymember.dto.response;
+package com.app.api.member.dto.response;
 
 import com.app.domain.member.constant.Role;
 import com.app.domain.member.entity.Member;

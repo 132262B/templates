@@ -1,7 +1,10 @@
 package com.app.api.access.controller;
 
-import com.app.api.access.dto.OauthLoginDto;
+import com.app.api.access.dto.request.LoginRequest;
+import com.app.api.access.dto.request.OauthLoginRequest;
+import com.app.api.access.dto.request.SignUpRequest;
 import com.app.api.access.dto.response.AccessTokenResponse;
+import com.app.api.access.dto.response.LoginResponse;
 import com.app.api.access.facade.AccessFacade;
 import com.app.api.access.validator.OauthValidator;
 import com.app.domain.member.constant.MemberType;
@@ -11,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "authentication", description = "로그인/로그아웃/토큰재발급 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/oauth")
+@RequestMapping("/api")
 public class AccessController {
 
     private final OauthValidator oauthValidator;
@@ -27,17 +31,30 @@ public class AccessController {
     private final AccessFacade accessFacade;
 
     @Tag(name = "authentication")
+    @Operation(summary = "일반 로그인 API", description = "일반 로그인 API")
+    @PostMapping
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(accessFacade.login(loginRequest));
+    }
+
+    @Tag(name = "authentication")
+    @Operation(summary = "일반 회원가입 API", description = "일반 회원가입 API")
+    @PostMapping
+    public ResponseEntity<LoginResponse> register(@Validated @RequestBody SignUpRequest signUpRequest) {
+        return ResponseEntity.ok(accessFacade.register(signUpRequest));
+    }
+
+
+    @Tag(name = "authentication")
     @Operation(summary = "소셜 로그인 API", description = "소셜 로그인 API")
-    @PostMapping("/login")
-    public ResponseEntity<OauthLoginDto.Response> oauthLogin(@RequestBody OauthLoginDto.Request oauthLoginRequestDto,
-                                                             @AuthorizationToken TokenDto token) {
+    @PostMapping("/oauth/login")
+    public ResponseEntity<LoginResponse> oauthLogin(@RequestBody OauthLoginRequest oauthLoginRequestDto,
+                                                    @AuthorizationToken TokenDto token) {
 
         oauthValidator.validateMemberType(oauthLoginRequestDto.getMemberType());
+        MemberType memberType = MemberType.from(oauthLoginRequestDto.getMemberType());
 
-        OauthLoginDto.Response jwtTokenResponseDto = accessFacade.oauthLogin(token.getToken(),
-                MemberType.from(oauthLoginRequestDto.getMemberType()));
-
-        return ResponseEntity.ok(jwtTokenResponseDto);
+        return ResponseEntity.ok(accessFacade.oauthLogin(token.getToken(), memberType));
     }
 
     @Tag(name = "authentication")
