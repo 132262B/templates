@@ -32,14 +32,14 @@ public class AccessController {
 
     @Tag(name = "authentication")
     @Operation(summary = "일반 로그인 API", description = "일반 로그인 API")
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(accessFacade.login(loginRequest));
     }
 
     @Tag(name = "authentication")
     @Operation(summary = "일반 회원가입 API", description = "일반 회원가입 API")
-    @PostMapping
+    @PostMapping("/sign-up")
     public ResponseEntity<LoginResponse> register(@Validated @RequestBody SignUpRequest signUpRequest) {
         return ResponseEntity.ok(accessFacade.register(signUpRequest));
     }
