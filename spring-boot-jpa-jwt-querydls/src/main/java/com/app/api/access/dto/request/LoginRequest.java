@@ -1,6 +1,7 @@
 package com.app.api.access.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
@@ -24,4 +25,9 @@ public class LoginRequest {
     @NotBlank
     private String password;
 
+    @Builder
+    public LoginRequest(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }

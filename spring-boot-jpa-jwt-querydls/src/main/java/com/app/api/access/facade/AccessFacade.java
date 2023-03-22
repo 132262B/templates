@@ -22,7 +22,6 @@ import com.app.oauth.service.SocialLoginApiServiceFactory;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,16 +39,11 @@ public class AccessFacade {
     private final TokenManager tokenManager;
 
     @Transactional
-    public LoginResponse register(SignUpRequest signUpRequest) {
+    public void register(SignUpRequest signUpRequest) {
         PasswordValidator.passwordCheck(signUpRequest.getPassword(), signUpRequest.getPasswordCheck());
 
         Member member = signUpRequest.toMemberEntity(MemberType.LOCAL, Role.USER);
-        member = memberService.registerMember(member);
-
-        JwtTokenDto jwtTokenDto = tokenManager.createJwtTokenDto(member.getId(), member.getRole());
-        member.updateRefreshToken(jwtTokenDto);
-
-        return LoginResponse.of(jwtTokenDto);
+        memberService.registerMember(member);
     }
 
     @Transactional

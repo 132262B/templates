@@ -1,6 +1,7 @@
 package com.app.api.access;
 
 import com.app.BaseSteps;
+import com.app.api.access.dto.request.LoginRequest;
 import com.app.api.access.dto.request.SignUpRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,13 +18,13 @@ class AccessControllerTest extends BaseSteps {
     void ifYouSuccessfullySignUpReturnsStatusCode200() throws Exception {
 
         // given
-        SignUpRequest request = 회원가입요청_생성();
+        final SignUpRequest request = 회원가입요청_생성();
 
         // when
         MockHttpServletResponse response = 회원가입요청(request);
 
         // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     @Test
@@ -31,11 +32,44 @@ class AccessControllerTest extends BaseSteps {
     void duplicateEmailStatusCode400() throws Exception {
 
         // given
-        SignUpRequest request = 회원가입요청_생성();
+        final SignUpRequest request = 회원가입요청_생성();
 
         // when
         회원가입요청(request);
         MockHttpServletResponse response = 회원가입요청(request);
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    @DisplayName("로그인 성공시, 상태코드 200 반환.")
+    void successfulLoginReturnsStatusCode200() throws Exception {
+
+        // given
+        final SignUpRequest signUpRequest = 회원가입요청_생성();
+        회원가입요청(signUpRequest);
+        final LoginRequest loginRequest = 로그인요청_생성();
+
+        // when
+        MockHttpServletResponse response = 로그인요청(loginRequest);
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("로그인 실패시, 상태코드 400 반환.")
+    void loginFailsStatusCode400IsReturned() throws Exception {
+
+        // given
+        final SignUpRequest signUpRequest = 회원가입요청_생성();
+        회원가입요청(signUpRequest);
+        LoginRequest loginRequest = 로그인요청_생성();
+        loginRequest.setPassword("!wrongPassword1234");
+
+        // when
+        MockHttpServletResponse response = 로그인요청(loginRequest);
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());

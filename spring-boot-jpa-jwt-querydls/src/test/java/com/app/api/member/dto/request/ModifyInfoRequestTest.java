@@ -11,13 +11,14 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("ModifyInfoRequest 단위테스트")
 class ModifyInfoRequestTest {
 
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
-    @DisplayName("둘다 값이 잘 들어간 경우")
+    @DisplayName("사용자이름, 프로필이 올바르게 들어간 경우.")
     @Test
-    void dtoValidateCheck_1() {
+    void ifBothValuesAreEnteredCorrectly() {
         final String username = "홍길동";
         final String profile = "https://domain.com/img_110x110.jpg";
         ModifyInfoRequest request = new ModifyInfoRequest(username, profile);
@@ -26,9 +27,9 @@ class ModifyInfoRequestTest {
         assertEquals(0, violations.size());
     }
 
-    @DisplayName("profile URL, null인 경우")
+    @DisplayName("프로필이 NULL이면 정규식 미작동.")
     @Test
-    void dtoValidateCheck_2() {
+    void ifProfileIsNullRegularExpressionDoesNotWork() {
         final String username = "홍길동";
         final String profile = null;
         ModifyInfoRequest request = new ModifyInfoRequest(username, profile);
@@ -37,9 +38,9 @@ class ModifyInfoRequestTest {
         assertEquals(0, violations.size());
     }
 
-    @DisplayName("profile URL, 옳바르지 않는 URL인 경우")
+    @DisplayName("프로필이 URL 형태가 아닌 경우.")
     @Test
-    void dtoValidateCheck_3() {
+    void ifTheProfileIsNotInTheFormOfUrl() {
         final String username = "홍길동";
         final String profile = "no_url";
         ModifyInfoRequest request = new ModifyInfoRequest(username, profile);
