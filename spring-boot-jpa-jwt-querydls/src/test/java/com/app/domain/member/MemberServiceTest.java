@@ -6,6 +6,7 @@ import com.app.domain.member.constant.Role;
 import com.app.domain.member.entity.Member;
 import com.app.domain.member.exception.DuplicateMemberException;
 import com.app.domain.member.service.MemberService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,8 +23,9 @@ class MemberServiceTest extends ServiceTest {
     @Autowired
     private MemberService memberService;
 
+    @DisplayName("회원생성 성공")
     @Test
-    void 회원생성_성공() {
+    void successfulMemberCreation() {
         // given
         final Long memberId = 1L;
 
@@ -42,8 +44,9 @@ class MemberServiceTest extends ServiceTest {
         assertThat(memberResponse.getMemberType()).isEqualTo(MemberType.KAKAO);
     }
 
+    @DisplayName("회원생성 도중 이메일 중복으로 Exception 발생")
     @Test
-    void 회원생성_도중_이메일중복으로_회원생성_실패() {
+    void exceptionOccursDueToDuplicateEmailDuringMemberCreation() {
         // given
         final String email = "member@domain.com";
         final Member firstMember = MemberSteps.회원정보_생성(email);
@@ -56,9 +59,10 @@ class MemberServiceTest extends ServiceTest {
                 .isInstanceOf(DuplicateMemberException.class);
     }
 
+    @DisplayName("회원정보 수정 성공")
     @Test
     @Transactional
-    void 회원정보_수정_성공() {
+    void successfulModificationOfMemberInformation() {
         // given
         final Long memberId = 1L;
 

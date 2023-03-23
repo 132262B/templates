@@ -3,12 +3,13 @@ package com.app.api.access.dto.request;
 import com.app.domain.member.constant.MemberType;
 import com.app.domain.member.constant.Role;
 import com.app.domain.member.entity.Member;
+import com.app.global.util.SHA256Util;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -26,13 +27,13 @@ public class SignUpRequest {
     private String email;
 
     @Schema(description = "비밀번호", example = "!Password123!", required = true)
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$\n", message = "비밀번호는 대문자, 소문자, 숫자, 특수문자 중 하나 이상을 포함해야 합니다.")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$", message = "비밀번호는 대문자, 소문자, 숫자, 특수문자 중 하나 이상을 포함해야 합니다.")
     @Length(min = 8)
     @NotBlank
     private String password;
 
     @Schema(description = "비밀번호 확인", example = "!Password123!", required = true)
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$\n", message = "비밀번호는 대문자, 소문자, 숫자, 특수문자 중 하나 이상을 포함해야 합니다.")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$", message = "비밀번호는 대문자, 소문자, 숫자, 특수문자 중 하나 이상을 포함해야 합니다.")
     @Length(min = 8)
     @NotBlank
     private String passwordCheck;
@@ -46,10 +47,19 @@ public class SignUpRequest {
     @Schema(description = "프로필 이미지 경로", example = "https://domain.com/img_110x110.jpg")
     private String profile;
 
-    public Member toMemberEntity(PasswordEncoder passwordEncoder,MemberType memberType, Role role) {
+    @Builder
+    public SignUpRequest(String email, String password, String passwordCheck, String username, String profile) {
+        this.email = email;
+        this.password = password;
+        this.passwordCheck = passwordCheck;
+        this.username = username;
+        this.profile = profile;
+    }
+
+    public Member toMemberEntity(MemberType memberType, Role role) {
         return Member.builder()
                 .email(this.email)
-                .password(passwordEncoder.encode(this.password))
+                .password(SHA256Util.encrypt(this.password))
                 .username( this.username)
                 .profile(this.profile)
                 .memberType(memberType)

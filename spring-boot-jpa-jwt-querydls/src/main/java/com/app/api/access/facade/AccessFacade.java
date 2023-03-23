@@ -15,13 +15,13 @@ import com.app.global.jwt.constant.GrantType;
 import com.app.global.jwt.constant.TokenType;
 import com.app.global.jwt.dto.JwtTokenDto;
 import com.app.global.jwt.service.TokenManager;
+import com.app.global.util.SHA256Util;
 import com.app.oauth.model.OAuthAttributes;
 import com.app.oauth.service.SocialLoginApiService;
 import com.app.oauth.service.SocialLoginApiServiceFactory;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,24 +38,17 @@ public class AccessFacade {
     private final MemberService memberService;
     private final TokenManager tokenManager;
 
-    private final PasswordEncoder passwordEncoder;
-
     @Transactional
-    public LoginResponse register(SignUpRequest signUpRequest) {
+    public void register(SignUpRequest signUpRequest) {
         PasswordValidator.passwordCheck(signUpRequest.getPassword(), signUpRequest.getPasswordCheck());
 
-        Member member = signUpRequest.toMemberEntity(passwordEncoder, MemberType.LOCAL, Role.USER);
-        member = memberService.registerMember(member);
-
-        JwtTokenDto jwtTokenDto = tokenManager.createJwtTokenDto(member.getId(), member.getRole());
-        member.updateRefreshToken(jwtTokenDto);
-
-        return LoginResponse.of(jwtTokenDto);
+        Member member = signUpRequest.toMemberEntity(MemberType.LOCAL, Role.USER);
+        memberService.registerMember(member);
     }
 
     @Transactional
     public LoginResponse login(LoginRequest loginRequest) {
-        loginRequest.setPassword(passwordEncoder.encode(loginRequest.getPassword()));
+        loginRequest.setPassword(SHA256Util.encrypt(loginRequest.getPassword()));
 
         Member member = memberService.findMemberByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
         JwtTokenDto jwtTokenDto = tokenManager.createJwtTokenDto(member.getId(), member.getRole());
