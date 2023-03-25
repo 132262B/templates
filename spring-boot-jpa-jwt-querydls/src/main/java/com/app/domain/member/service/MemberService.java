@@ -1,6 +1,7 @@
 package com.app.domain.member.service;
 
 import com.app.api.member.dto.request.ModifyInfoRequest;
+import com.app.domain.member.constant.MemberType;
 import com.app.domain.member.entity.Member;
 import com.app.domain.member.exception.DuplicateMemberException;
 import com.app.domain.member.repository.MemberRepository;
@@ -8,12 +9,15 @@ import com.app.global.error.ErrorCode;
 import com.app.global.error.exception.AuthenticationException;
 import com.app.global.error.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.logging.LogLevel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -23,20 +27,23 @@ public class MemberService {
 
     @Transactional
     public Member registerMember(Member member) {
-        validateDuplicateMember(member.getEmail());
+        final String email = member.getEmail();
+        final MemberType memberType = member.getMemberType();
+
+        validateDuplicateMember(email, memberType);
         return memberRepository.save(member);
     }
 
     // 이메일 체크
-    private void validateDuplicateMember(String email) {
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+    private void validateDuplicateMember(String email, MemberType memberType) {
+        Optional<Member> optionalMember = memberRepository.findByEmailAndMemberType(email, memberType);
         if (optionalMember.isPresent()) {
             throw new DuplicateMemberException();
         }
     }
 
-    public Optional<Member> findMemberByEmail(String email) {
-        return memberRepository.findByEmail(email);
+    public Optional<Member> findMemberByEmail(String email, MemberType memberType) {
+        return memberRepository.findByEmailAndMemberType(email, memberType);
     }
 
     public Member findMemberByRefreshToken(String refreshToken) {
@@ -65,8 +72,8 @@ public class MemberService {
         memberRepository.delete(member);
     }
 
-    public Member findMemberByEmailAndPassword(String email, String password) {
-        return memberRepository.findByEmailAndPassword(email, password)
+    public Member findMemberByEmailAndPasswordAndMemberType(String email, String password, MemberType memberType) {
+        return memberRepository.findMemberByEmailAndPasswordAndMemberType(email, password, memberType)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.EMAIL_OR_PASSWORD_INCONSISTENCY));
     }
 }

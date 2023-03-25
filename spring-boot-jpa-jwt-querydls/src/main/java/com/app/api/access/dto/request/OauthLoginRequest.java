@@ -11,3 +11,5 @@ public class OauthLoginRequest {
     private String memberType;
 
 }
+
+
