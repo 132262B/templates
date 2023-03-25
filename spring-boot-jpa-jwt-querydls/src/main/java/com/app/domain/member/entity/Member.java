@@ -10,9 +10,9 @@ import org.hibernate.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
-@Entity
 @Getter
 @Where(clause = "status = 'Y'")
 @SQLDelete(sql = "UPDATE member SET status = 'N' WHERE member_id = ?")
@@ -21,22 +21,24 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+@Table(uniqueConstraints = {@UniqueConstraint(name = "iduk", columnNames = {"email", "memberType"})})
 public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 10, nullable = false)
-    private MemberType memberType;
 
-    @Column(unique = true, length = 50, nullable = false)
+    @Column(length = 50, nullable = false)
     private String email;
 
     @Column(length = 200)
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10, nullable = false)
+    private MemberType memberType;
     @Column(length = 20, nullable = false)
     private String username;
 
@@ -64,7 +66,6 @@ public class Member extends BaseTimeEntity {
     public void expireRefreshToken(LocalDateTime now) {
         this.tokenExpirationTime = now;
     }
-
 
     public void changeMemberInfo(String username, String profile) {
         this.username = username;

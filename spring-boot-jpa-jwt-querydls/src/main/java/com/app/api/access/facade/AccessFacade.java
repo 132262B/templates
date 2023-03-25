@@ -50,7 +50,11 @@ public class AccessFacade {
     public LoginResponse login(LoginRequest loginRequest) {
         loginRequest.setPassword(SHA256Util.encrypt(loginRequest.getPassword()));
 
-        Member member = memberService.findMemberByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
+        final String email = loginRequest.getEmail();
+        final String password = loginRequest.getPassword();
+        final MemberType memberType = MemberType.LOCAL;
+
+        Member member = memberService.findMemberByEmailAndPasswordAndMemberType(email, password, memberType);
         JwtTokenDto jwtTokenDto = tokenManager.createJwtTokenDto(member.getId(), member.getRole());
         member.updateRefreshToken(jwtTokenDto);
 
@@ -62,8 +66,10 @@ public class AccessFacade {
         SocialLoginApiService socialLoginApiService = SocialLoginApiServiceFactory.getSocialLoginApiService(memberType);
         OAuthAttributes userInfo = socialLoginApiService.getUserInfo(accessToken);
 
+        log.debug(userInfo.toString());
+
         JwtTokenDto jwtTokenDto;
-        Optional<Member> optionalMember = memberService.findMemberByEmail(userInfo.getEmail());
+        Optional<Member> optionalMember = memberService.findMemberByEmail(userInfo.getEmail(), memberType);
 
         Member oauthMember;
         if (optionalMember.isEmpty()) { // 신규 회원 가입
